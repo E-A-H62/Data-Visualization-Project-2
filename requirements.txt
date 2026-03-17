@@ -1,2 +1,5 @@
 kagglehub==1.0.0
 pandas==3.0.1
+wordcloud==1.9.6
+matplotlib==3.10.1
+nltk==3.9.1

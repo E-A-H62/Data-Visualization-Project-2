@@ -1,7 +1,12 @@
 import kagglehub
 import os
 import pandas as pd
+import matplotlib.pyplot as plt
+import nltk
+from wordcloud import WordCloud
 
+# CREATE DATASET ----------------------------------------------------
+print("Creating dataset...")
 # Download latest version
 path = kagglehub.dataset_download("edenbd/children-stories-text-corpus")
 print("Path to dataset files:", path)
@@ -110,3 +115,26 @@ df = pd.DataFrame(rows)
 # Print the dataset
 print(df.head())
 print(df.tail())
+
+
+# PREPROCESS STORIES ----------------------------------------------------------
+print("\nPreprocessing stories...")
+# STILL IN PROGRESS
+
+
+# VISUALIZE STORIES --------------------------------------------------------------
+print("\nCreating wordcloud of all stories (not preprocessed)...")
+wordcloud = WordCloud(background_color="white").generate(df["text"].str.cat(sep=" ")) # .str.cat(sep=" ") concatenates stories into single string
+plt.imshow(wordcloud, interpolation="bilinear")
+plt.axis("off")
+plt.show()
+
+print("\nCreating wordcloud of all stories (preprocessed)...")
+# STILL IN PROGRESS
+
+print("\nCreating wordcloud of 'The Happy Prince' story...")
+# STILL IN PROGRESS FOR PREPROCESS
+wcStory1 = WordCloud(background_color="white").generate(df[df["title"] == "The Happy Prince"]["text"].str.cat(sep=" ")) # .str.cat(sep=" ") concatenates stories into single string
+plt.imshow(wcStory1, interpolation="bilinear")
+plt.axis("off")
+plt.show()
