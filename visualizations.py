@@ -3,6 +3,7 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import nltk
+from nltk.corpus import stopwords
 from wordcloud import WordCloud
 
 # CREATE DATASET ----------------------------------------------------
@@ -121,20 +122,38 @@ print(df.tail())
 print("\nPreprocessing stories...")
 # STILL IN PROGRESS
 
+# REMOVE STOP WORDS
+stopwords = set(stopwords.words("english"))
+df["processed_text"] = df["text"].apply(lambda x: " ".join(word.lower() for word in x.split() if word.lower() not in stopwords))
+print(df["processed_text"].head())
+print(df["processed_text"].tail())
+
 
 # VISUALIZE STORIES --------------------------------------------------------------
 print("\nCreating wordcloud of all stories (not preprocessed)...")
 wordcloud = WordCloud(background_color="white").generate(df["text"].str.cat(sep=" ")) # .str.cat(sep=" ") concatenates stories into single string
+plt.title("Wordcloud of all stories (not preprocessed)")
 plt.imshow(wordcloud, interpolation="bilinear")
 plt.axis("off")
 plt.show()
 
 print("\nCreating wordcloud of all stories (preprocessed)...")
-# STILL IN PROGRESS
+wordcloud = WordCloud(background_color="white").generate(df["processed_text"].str.cat(sep=" ")) # .str.cat(sep=" ") concatenates stories into single string
+plt.title("Wordcloud of all stories (preprocessed)")
+plt.imshow(wordcloud, interpolation="bilinear")
+plt.axis("off")
+plt.show()
 
-print("\nCreating wordcloud of 'The Happy Prince' story...")
-# STILL IN PROGRESS FOR PREPROCESS
+print("\nCreating wordcloud of 'The Happy Prince' story (not preprocessed)...")
 wcStory1 = WordCloud(background_color="white").generate(df[df["title"] == "The Happy Prince"]["text"].str.cat(sep=" ")) # .str.cat(sep=" ") concatenates stories into single string
+plt.title("Wordcloud of 'The Happy Prince' story (not preprocessed)")
+plt.imshow(wcStory1, interpolation="bilinear")
+plt.axis("off")
+plt.show()
+
+print("\nCreating wordcloud of 'The Happy Prince' story (preprocessed)...")
+wcStory1 = WordCloud(background_color="white").generate(df[df["title"] == "The Happy Prince"]["processed_text"].str.cat(sep=" ")) # .str.cat(sep=" ") concatenates stories into single string
+plt.title("Wordcloud of 'The Happy Prince' story (preprocessed)")
 plt.imshow(wcStory1, interpolation="bilinear")
 plt.axis("off")
 plt.show()
