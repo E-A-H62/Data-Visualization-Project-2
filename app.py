@@ -3,7 +3,7 @@ import re
 import tempfile
 from functools import lru_cache
 import nltk
-from nltk.corpus import stopwords as nltk_stopwords
+from nltk.corpus import stopwords
 import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -124,7 +124,7 @@ def get_processed_df() -> pd.DataFrame:
             rows.append({"title": current_title, "text": line.strip()})
 
     df = pd.DataFrame(rows)
-    stop_words = set(nltk_stopwords.words("english")) # Remove stop words
+    stop_words = set(stopwords.words("english")) # Remove stop words
     df["processed_text"] = df["text"].apply(lambda x: " ".join(word.lower() for word in x.split() if word.lower() not in stop_words))
     return df
 
@@ -194,9 +194,6 @@ def make_placeholder_image() -> str:
     plt.close(fig)
     return str(tmp_path)
 
-PLACEHOLDER_IMG_PATH = make_placeholder_image()
-
-
 app_ui = ui.page_fluid(
     ui.h2("Children Stories Word Clouds"),
     ui.input_select("story", "Story", choices=STORY_CHOICES, selected=DEFAULT_SELECTED_STORY),
@@ -225,8 +222,14 @@ def server(input: Inputs, output: Outputs, session: Session):
     @render.image(delete_file=True)
     def wordcloud() -> ImgData:
         # Only generate when the user clicks "Generate" (avoids long initial load).
+        # Fresh temp file each time: `delete_file=True` removes the PNG after serve, so a
+        # module-level path would break on the next render (reconnect, refresh, etc.).
         if input.render() == 0:
-            return {"src": PLACEHOLDER_IMG_PATH, "alt": "Word cloud placeholder", "width": "100%"}
+            return {
+                "src": make_placeholder_image(),
+                "alt": "Word cloud placeholder",
+                "width": "100%",
+            }
 
         story = input.story()
         text_mode = input.text_mode()
