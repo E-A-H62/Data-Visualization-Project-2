@@ -14,6 +14,25 @@ from shiny.types import ImgData
 # Shiny runs on a server; avoid requiring a GUI backend.
 matplotlib.use("Agg")
 
+"""
+Story titles not explicitly listed in text corpus:
+Myths Retold by Children
+Household Tales
+Indian Fairy Tales
+Fairy Tales Second Series
+Childhoods Favorites and Fairy Stories
+Celtic Tales
+The Secret Garden
+Comic History of the United States
+Folk Tales from the Russian
+Snow-White or The House in the Wood
+Dramatic Reader for Lower Grades
+Aesop Fables
+The Louisa Alcott Reader…
+The Pig Brother and Other Fables and Stories
+The Worlds Greatest Books, Volume 3
+"""
+
 # Canonical story titles used to detect section headers in the raw text file.
 KNOWN_TITLES = [
     "The Happy Prince",
