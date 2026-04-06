@@ -14,9 +14,17 @@ This project uses the **Children Stories Text Corpus** (downloaded via `kagglehu
 
 ### Install dependencies
 
+For Mac/Linux operating systems:
 ```bash
 python -m venv .venv
 source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+For Windows operating systems:
+```bash
+python -m venv .venv
+.venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
