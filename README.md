@@ -28,19 +28,23 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-## Run locally
+## Running Programs
 
-### Option A: Run the local visualization script
+### Create dataset
+```bash
+python dataset.py
+```
+Result should update into data/children_stories_dataset.csv
 
+### Word Cloud Generation:
 ```bash
 python visualizations.py
 ```
+Word clouds displayed (unprocessed, stop word removal, lemmatization) on matplotlib window
 
-### Option B: Run the interactive website
-
+### Zipf Demo: Run the interactive website
 ```bash
 python app.py
 ```
-
 Then open the printed local URL in your browser (the app binds to `0.0.0.0` and uses `PORT` when provided by a hosting platform).
 
