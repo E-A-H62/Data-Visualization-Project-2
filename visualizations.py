@@ -14,6 +14,8 @@ nltk.download('punkt_tab', quiet=True)
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
+from nltk.corpus import wordnet
+from nltk import pos_tag
 from wordcloud import WordCloud
 
 # CREATE DATASET ----------------------------------------------------
@@ -140,8 +142,14 @@ print(df["processed_stopwords"].tail())
 # LEMMATIZATION
 lemmatizer = WordNetLemmatizer()
 tokens = word_tokenize(df["processed_stopwords"].str.cat(sep=" ")) # Tokenize all processed stories into single list of words
+
+def get_wordnet_pos(word):
+    tag = pos_tag([word])[0][1][0].upper()
+    tag_map = {"J": wordnet.ADJ, "V": wordnet.VERB, "N": wordnet.NOUN, "R": wordnet.ADV}
+    return tag_map.get(tag, wordnet.NOUN)
+
 df["lemmatized_text"] = df["processed_stopwords"].apply(
-    lambda x: " ".join(lemmatizer.lemmatize(word) for word in word_tokenize(x))
+    lambda x: " ".join(lemmatizer.lemmatize(word, get_wordnet_pos(word)) for word in word_tokenize(x))
 )
 print(df["lemmatized_text"].head())
 print(df['lemmatized_text'].tail())
