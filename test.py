@@ -126,14 +126,28 @@ for line in lines:
 # Create dataframe from rows
 df = pd.DataFrame(rows)
 
-# Print the dataset
-# print(df.head())
-# print(df.tail())
+
+# VISUALIZE STORIES --------------------------------------------------------------
+# Unprocessed wordcloud:
+# Expected: Wordclouds of non-preprocessed stories will have more words and more unique words (e.g. "The", "and", "of").
+print("\nCreating wordcloud of all stories (unprocessed)...")
+unprocessed_wordcloud = WordCloud(background_color="white", stopwords=None).generate(df["text"].str.cat(sep=" ")) # .str.cat(sep=" ") concatenates stories into single string
+plt.title("Wordcloud of all stories (unprocessed)")
+plt.imshow(unprocessed_wordcloud, interpolation="bilinear")
+plt.axis("off")
+plt.show()
+
+# Wordclouds of "The Happy Prince" story:
+print("\nCreating wordcloud of 'The Happy Prince' story (unprocessed)...")
+unprocessed_wcStory1 = WordCloud(background_color="white", stopwords=None).generate(df[df["title"] == "The Happy Prince"]["text"].str.cat(sep=" "))
+plt.title("Wordcloud of 'The Happy Prince' story (unprocessed)")
+plt.imshow(unprocessed_wcStory1, interpolation="bilinear")
+plt.axis("off")
+plt.show()
 
 
 # PREPROCESS STORIES ----------------------------------------------------------
 print("\nPreprocessing stories...")
-
 # REMOVE STOP WORDS
 stopwords = set(stopwords.words("english"))
 tokenizer = RegexpTokenizer(r'\w+')
@@ -143,6 +157,25 @@ df["processed_stopwords"] = df["text"].apply(
 print(df["processed_stopwords"].head())
 print(df["processed_stopwords"].tail())
 
+
+# VISUALIZE STORIES --------------------------------------------------------------
+# Expected: Wordclouds of preprocessed stories will have fewer words and more common words (e.g. "happy", "prince").
+print("\nCreating wordcloud of all stories (preprocessed stop words)...")
+processed_wordcloud = WordCloud(background_color="white", stopwords=None).generate(df["processed_stopwords"].str.cat(sep=" "))
+plt.title("Wordcloud of all stories (preprocessed stop words)")
+plt.imshow(processed_wordcloud, interpolation="bilinear")
+plt.axis("off")
+plt.show()
+
+print("\nCreating wordcloud of 'The Happy Prince' story (removed stop words)...")
+processed_wcStory1 = WordCloud(background_color="white", stopwords=None).generate(df[df["title"] == "The Happy Prince"]["processed_stopwords"].str.cat(sep=" "))
+plt.title("Wordcloud of 'The Happy Prince' story (removed stop words)")
+plt.imshow(processed_wcStory1, interpolation="bilinear")
+plt.axis("off")
+plt.show()
+
+
+# PREPROCESS STORIES ----------------------------------------------------------
 # LEMMATIZATION
 lemmatizer = WordNetLemmatizer()
 tokens = word_tokenize(df["processed_stopwords"].str.cat(sep=" ")) # Tokenize all processed stories into single list of words
@@ -159,6 +192,22 @@ print(df["lemmatized_text"].head())
 print(df['lemmatized_text'].tail())
 
 
+# VISUALIZE STORIES --------------------------------------------------------------
+# Expected: Wordclouds of lemmatized stories will have fewer words and more common words (e.g. "happy", "prince").
+print("\nCreating wordcloud of all stories (lemmatized)...")
+lemmatized_wordcloud = WordCloud(background_color="white", stopwords=None).generate(df["lemmatized_text"].str.cat(sep=" "))
+plt.title("Wordcloud of all stories (lemmatized)")
+plt.imshow(lemmatized_wordcloud, interpolation="bilinear")
+plt.axis("off")
+plt.show()
+
+print("\nCreating wordcloud of 'The Happy Prince' story (lemmatized)...")
+lemmatized_wcStory1 = WordCloud(background_color="white", stopwords=None).generate(df[df["title"] == "The Happy Prince"]["lemmatized_text"].str.cat(sep=" "))
+plt.title("Wordcloud of 'The Happy Prince' story (lemmatized)")
+plt.imshow(lemmatized_wcStory1, interpolation="bilinear")
+plt.axis("off")
+plt.show()
+
 # DOUBLE CHECK PREPROCESSING
 # Check that processed stories have fewer words than unprocessed stories
 # Unprocessed
@@ -172,54 +221,3 @@ print("Stopwords removed:", freq_processed.most_common(20))
 # Lemmatized
 freq_lemmatized = FreqDist(word_tokenize(df["lemmatized_text"].str.cat(sep=" ")))
 print("Lemmatized:", freq_lemmatized.most_common(20))
-
-
-# VISUALIZE STORIES --------------------------------------------------------------
-# Unprocessed wordcloud:
-# Expected: Wordclouds of non-preprocessed stories will have more words and more unique words (e.g. "The", "and", "of").
-print("\nCreating wordcloud of all stories (unprocessed)...")
-unprocessed_wordcloud = WordCloud(background_color="white", stopwords=None).generate(df["text"].str.cat(sep=" ")) # .str.cat(sep=" ") concatenates stories into single string
-plt.title("Wordcloud of all stories (unprocessed)")
-plt.imshow(unprocessed_wordcloud, interpolation="bilinear")
-plt.axis("off")
-plt.show()
-
-# Processed wordcloud:
-# Expected: Wordclouds of preprocessed stories will have fewer words and more common words (e.g. "happy", "prince").
-print("\nCreating wordcloud of all stories (preprocessed stop words)...")
-processed_wordcloud = WordCloud(background_color="white", stopwords=None).generate(df["processed_stopwords"].str.cat(sep=" "))
-plt.title("Wordcloud of all stories (preprocessed stop words)")
-plt.imshow(processed_wordcloud, interpolation="bilinear")
-plt.axis("off")
-plt.show()
-
-# Expected: Wordclouds of lemmatized stories will have fewer words and more common words (e.g. "happy", "prince").
-print("\nCreating wordcloud of all stories (lemmatized)...")
-lemmatized_wordcloud = WordCloud(background_color="white", stopwords=None).generate(df["lemmatized_text"].str.cat(sep=" "))
-plt.title("Wordcloud of all stories (lemmatized)")
-plt.imshow(lemmatized_wordcloud, interpolation="bilinear")
-plt.axis("off")
-plt.show()
-
-
-# Wordclouds of "The Happy Prince" story:
-print("\nCreating wordcloud of 'The Happy Prince' story (unprocessed)...")
-unprocessed_wcStory1 = WordCloud(background_color="white", stopwords=None).generate(df[df["title"] == "The Happy Prince"]["text"].str.cat(sep=" "))
-plt.title("Wordcloud of 'The Happy Prince' story (unprocessed)")
-plt.imshow(unprocessed_wcStory1, interpolation="bilinear")
-plt.axis("off")
-plt.show()
-
-print("\nCreating wordcloud of 'The Happy Prince' story (removed stop words)...")
-processed_wcStory1 = WordCloud(background_color="white", stopwords=None).generate(df[df["title"] == "The Happy Prince"]["processed_stopwords"].str.cat(sep=" "))
-plt.title("Wordcloud of 'The Happy Prince' story (removed stop words)")
-plt.imshow(processed_wcStory1, interpolation="bilinear")
-plt.axis("off")
-plt.show()
-
-print("\nCreating wordcloud of 'The Happy Prince' story (lemmatized)...")
-lemmatized_wcStory1 = WordCloud(background_color="white", stopwords=None).generate(df[df["title"] == "The Happy Prince"]["lemmatized_text"].str.cat(sep=" "))
-plt.title("Wordcloud of 'The Happy Prince' story (lemmatized)")
-plt.imshow(lemmatized_wcStory1, interpolation="bilinear")
-plt.axis("off")
-plt.show()
