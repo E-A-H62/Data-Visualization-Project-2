@@ -15,7 +15,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import wordnet
-from nltk import pos_tag
+from nltk import RegexpTokenizer, pos_tag
 from wordcloud import WordCloud
 
 # CREATE DATASET ----------------------------------------------------
@@ -135,7 +135,10 @@ print("\nPreprocessing stories...")
 
 # REMOVE STOP WORDS
 stopwords = set(stopwords.words("english"))
-df["processed_stopwords"] = df["text"].apply(lambda x: " ".join(word.lower() for word in x.split() if word.lower() not in stopwords))
+tokenizer = RegexpTokenizer(r'\w+')
+df["processed_stopwords"] = df["text"].apply(
+    lambda x: " ".join(word.lower() for word in tokenizer.tokenize(x) if word.lower() not in stopwords)
+)
 print(df["processed_stopwords"].head())
 print(df["processed_stopwords"].tail())
 
@@ -159,7 +162,7 @@ print(df['lemmatized_text'].tail())
 # Unprocessed wordcloud:
 # Expected: Wordclouds of non-preprocessed stories will have more words and more unique words (e.g. "The", "and", "of").
 print("\nCreating wordcloud of all stories (not preprocessed)...")
-wordcloud = WordCloud(background_color="white").generate(df["text"].str.cat(sep=" ")) # .str.cat(sep=" ") concatenates stories into single string
+wordcloud = WordCloud(background_color="white", stopwords=None).generate(df["text"].str.cat(sep=" ")) # .str.cat(sep=" ") concatenates stories into single string
 plt.title("Wordcloud of all stories (not preprocessed)")
 plt.imshow(wordcloud, interpolation="bilinear")
 plt.axis("off")
@@ -185,7 +188,7 @@ plt.show()
 
 # Wordclouds of "The Happy Prince" story:
 print("\nCreating wordcloud of 'The Happy Prince' story (not preprocessed)...")
-wcStory1 = WordCloud(background_color="white").generate(df[df["title"] == "The Happy Prince"]["text"].str.cat(sep=" "))
+wcStory1 = WordCloud(background_color="white", stopwords=None).generate(df[df["title"] == "The Happy Prince"]["text"].str.cat(sep=" "))
 plt.title("Wordcloud of 'The Happy Prince' story (not preprocessed)")
 plt.imshow(wcStory1, interpolation="bilinear")
 plt.axis("off")
